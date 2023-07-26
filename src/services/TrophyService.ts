@@ -1,5 +1,5 @@
 import {
-  AuthTokensResponse,
+  AuthTokensResponse as PsnAuthTokensResponse,
   exchangeCodeForAccessToken,
   exchangeNpssoForCode,
   getTitleTrophies,
@@ -13,8 +13,10 @@ import {
   UserThinTrophy,
   UserTitlesResponse,
   UserTrophiesEarnedForTitleResponse,
+  exchangeRefreshTokenForAuthTokens,
 } from "psn-api";
 import { TrophyGroup } from "psn-api/dist/models/trophy-group.model";
+import fs from "fs";
 
 declare let process: {
   env: {
@@ -30,6 +32,11 @@ export interface ITrophyGroup extends TrophyGroup {
 
 export type Platform = "trophy" | "trophy2" | undefined;
 
+export interface AuthTokensResponse extends PsnAuthTokensResponse {
+  expirationDate?: string;
+  refreshExpirationDate?: string;
+}
+
 export class TrophyService {
   private npsso: string;
   private accessCode?: string;
@@ -40,8 +47,78 @@ export class TrophyService {
   }
 
   public async initialize() {
-    this.accessCode = await exchangeNpssoForCode(this.npsso);
-    this.authorization = await exchangeCodeForAccessToken(this.accessCode);
+    if (!!this.authorization) {
+      return;
+    }
+
+    this.authorization = this.getPersistentAuthorization();
+
+    const nowTime = new Date().getTime();
+    const expirationDateTime = new Date(
+      this.authorization?.expirationDate ?? "01-01-1970"
+    ).getTime();
+    const refreshExpirationDateTime = new Date(
+      this.authorization?.refreshExpirationDate ?? "01-01-1970"
+    ).getTime();
+
+    if (
+      (expirationDateTime < nowTime && refreshExpirationDateTime < nowTime) ||
+      !this.authorization
+    ) {
+      this.accessCode = await exchangeNpssoForCode(this.npsso);
+      this.authorization = await exchangeCodeForAccessToken(this.accessCode);
+
+      this.authorization = this.extendAuthorization(this.authorization);
+      this.setPersistentAuthorization(this.authorization);
+    } else if (expirationDateTime < nowTime) {
+      await this.refresh();
+    }
+  }
+
+  public async refresh() {
+    const oldAuthorization =
+      this.authorization ?? this.getPersistentAuthorization();
+
+    if (!oldAuthorization) {
+      throw new Error("Can't retrieve new tokens");
+    }
+
+    this.authorization = await exchangeRefreshTokenForAuthTokens(
+      oldAuthorization.refreshToken
+    );
+
+    this.authorization = this.extendAuthorization(this.authorization);
+    this.setPersistentAuthorization(this.authorization);
+  }
+
+  private getPersistentAuthorization(): AuthTokensResponse | undefined {
+    try {
+      const data = fs.readFileSync("keys.json");
+
+      return JSON.parse(data.toString()) as AuthTokensResponse;
+    } catch (e) {
+      return undefined;
+    }
+  }
+
+  private setPersistentAuthorization(authorization: AuthTokensResponse): void {
+    fs.writeFileSync("keys.json", JSON.stringify(authorization));
+  }
+
+  private extendAuthorization(
+    authorization: AuthTokensResponse
+  ): AuthTokensResponse {
+    const now = new Date();
+
+    authorization.expirationDate = new Date(
+      now.getTime() + authorization.expiresIn * 1000
+    ).toISOString();
+
+    authorization.refreshExpirationDate = new Date(
+      now.getTime() + authorization.refreshTokenExpiresIn * 1000
+    ).toISOString();
+
+    return authorization;
   }
 
   public async getTitles(offset: number = 0): Promise<UserTitlesResponse> {

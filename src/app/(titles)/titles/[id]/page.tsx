@@ -38,7 +38,7 @@ export default async function TitlePage({ params: { id } }: any) {
       </div>
       <div className="w-full py-2 space-y-12">
         {groups.map((group) => (
-          <div>
+          <div key={group.trophyGroupId}>
             <GroupHeader group={group} />
 
             <div className="space-y-6 mt-6 pb-6">

@@ -17,7 +17,7 @@ export default async function TitleSidePage({ params: { id } }: any) {
       </div>
       <div className="overflow-auto h-full space-y-12">
         {groups.map((group) => (
-          <div>
+          <div key={group.trophyGroupId}>
             <GroupHeader group={group} />
 
             <div className="space-y-6 mt-6 pb-6">
