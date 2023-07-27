@@ -3,7 +3,7 @@ import { TrophyTitle } from "psn-api";
 import CompletionBar from "./CompletionBar";
 import DefinedTrophies from "./DefinedTrophies";
 import Icon from "./Icon";
-import PlatinumTrophy from "./PlatinumTrophy";
+import { PlatinumTrophy } from "./PlatinumTrophy";
 
 type Props = {
   title: TrophyTitle;

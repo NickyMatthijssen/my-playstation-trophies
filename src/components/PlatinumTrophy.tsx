@@ -4,7 +4,7 @@ type Props = {
   trophies: TrophyCounts;
 };
 
-export default function PlatinumTrophy({ trophies }: Props) {
+export function PlatinumTrophy({ trophies }: Props) {
   if (!trophies.platinum) {
     return <></>;
   }

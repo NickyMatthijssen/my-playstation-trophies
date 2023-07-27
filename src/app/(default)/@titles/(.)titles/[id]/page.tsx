@@ -20,7 +20,7 @@ export default async function TitleSidePage({ params: { id } }: any) {
           <div key={group.trophyGroupId}>
             <GroupHeader group={group} />
 
-            <div className="space-y-6 mt-6 pb-6">
+            <div className="space-y-6 mt-6 pb-24">
               {group.trophies.map((trophy) => (
                 <Trophy trophy={trophy} key={trophy.trophyId} />
               ))}

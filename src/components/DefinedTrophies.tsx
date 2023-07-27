@@ -1,13 +1,15 @@
 import { TrophyCounts } from "psn-api";
+import { useMemo } from "react";
 
 type Props = {
   trophies: TrophyCounts;
 };
 
 export default function DefinedTrophies({ trophies }: Props) {
-  // @ts-ignore
-  delete trophies.platinum;
-  const types = Object.keys(trophies).reverse();
+  const copy: Partial<TrophyCounts> = { ...trophies };
+  delete copy.platinum;
+
+  const types = Object.keys(copy).reverse();
 
   return (
     <div className="flex space-x-4">

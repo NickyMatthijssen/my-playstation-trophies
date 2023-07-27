@@ -1,7 +1,7 @@
 import TrophyService, { ITrophyGroup } from "~/services/TrophyService";
 import DefinedTrophies from "./DefinedTrophies";
 import Icon from "./Icon";
-import PlatinumTrophy from "./PlatinumTrophy";
+import { PlatinumTrophy } from "./PlatinumTrophy";
 
 type Props = {
   group: ITrophyGroup;
