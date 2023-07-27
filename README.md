@@ -51,4 +51,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## Refreshing the token
 
-In development
+When running the app with the start or dev commands, Quirrel will be launched as well.
+Quarrel handles serverless cronjobs to make sure the api token will be refreshed.
+This is important since the SSO token can expire and the app won't work anymore
+and it takes time to get a new SSO taken and setup again.
