@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "concurrently 'next dev' 'quirrel'",
     "build": "next build",
-    "start": "concurrently 'next start' 'quirrel'",
+    "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
