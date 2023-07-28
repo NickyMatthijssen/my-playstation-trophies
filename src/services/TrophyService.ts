@@ -61,16 +61,25 @@ export class TrophyService {
       this.authorization?.refreshExpirationDate ?? "01-01-1970"
     ).getTime();
 
+    console.log(
+      expirationDateTime,
+      refreshExpirationDateTime,
+      expirationDateTime < nowTime && refreshExpirationDateTime < nowTime,
+      expirationDateTime < nowTime
+    );
+
     if (
       (expirationDateTime < nowTime && refreshExpirationDateTime < nowTime) ||
       !this.authorization
     ) {
+      console.log("NO AUTHORIZATION");
       this.accessCode = await exchangeNpssoForCode(this.npsso);
       this.authorization = await exchangeCodeForAccessToken(this.accessCode);
 
       this.authorization = this.extendAuthorization(this.authorization);
       this.setPersistentAuthorization(this.authorization);
     } else if (expirationDateTime < nowTime) {
+      console.log("REFRESHING");
       await this.refresh();
     }
   }
