@@ -40,7 +40,7 @@ export interface AuthTokensResponse extends PsnAuthTokensResponse {
 export class TrophyService {
   private npsso: string;
   private accessCode?: string;
-  private authorization?: AuthTokensResponse;
+  public authorization?: AuthTokensResponse;
 
   constructor(npsso: string) {
     this.npsso = npsso;

@@ -1,12 +1,10 @@
-import { CronJob } from "quirrel/next-app";
+import { NextResponse } from "next/server";
 import trophyService from "~/services/TrophyService";
 
-const RefreshJob = CronJob(
-  "api/authentication/refresh",
-  "@weekly",
-  async () => {
-    await trophyService.refresh();
-  }
-);
+export async function POST() {
+  await trophyService.refresh();
 
-export const POST = RefreshJob as Function;
+  return NextResponse.json({
+    authorization: trophyService.authorization,
+  });
+}
