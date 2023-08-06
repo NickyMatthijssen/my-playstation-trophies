@@ -1,7 +1,7 @@
 "use client";
 
 import clsx from "clsx";
-import { useRouter, useSelectedLayoutSegment } from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 import { useMemo } from "react";
 
 export const revalidate = 0;

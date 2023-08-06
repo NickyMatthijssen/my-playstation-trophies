@@ -53,7 +53,9 @@ export class TrophyService {
 
     this.authorization = this.getPersistentAuthorization();
 
-    const nowTime = new Date().getTime();
+    const now = new Date();
+    now.setHours(new Date().getHours() + 2);
+    const nowTime = now.getTime();
     const expirationDateTime = new Date(
       this.authorization?.expirationDate ?? "01-01-1970"
     ).getTime();
@@ -83,12 +85,10 @@ export class TrophyService {
       throw new Error("Can't retrieve new tokens");
     }
 
-    console.log("old token", oldAuthorization.accessToken);
     this.authorization = await exchangeRefreshTokenForAuthTokens(
       oldAuthorization.refreshToken
     );
 
-    console.log("new token", this.authorization.accessToken);
     this.authorization = this.extendAuthorization(this.authorization);
     this.setPersistentAuthorization(this.authorization);
   }
