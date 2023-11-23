@@ -29,8 +29,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <main className="flex items-center justify-center w-screen h-screen">
-          <div className="bg-neutral-900 xl:border w-screen max-w-[1800px] max-h-[1024px] h-screen overflow-auto xl:rounded-2xl">
+        <main className="flex items-center justify-center w-screen h-[100svh]">
+          <div className="bg-neutral-900 xl:border w-screen max-w-[1800px] max-h-[1024px] h-[100svh] overflow-auto xl:rounded-2xl">
             {children}
           </div>
         </main>
