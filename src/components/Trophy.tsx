@@ -11,7 +11,7 @@ export default function Trophy({ trophy }: Props) {
     <div
       className={clsx("flex space-x-4 px-4", !trophy.earned && "opacity-50")}
     >
-      <div>
+      <div className="flex-shrink-0">
         <TrophyIcon trophy={trophy} />
       </div>
 

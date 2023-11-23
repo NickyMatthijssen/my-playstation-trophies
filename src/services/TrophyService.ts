@@ -24,6 +24,9 @@ declare let process: {
   };
 };
 
+export const revalidate = 0;
+export const dynamic = "force-dynamic";
+
 export interface ITrophy extends TitleThinTrophy, UserThinTrophy {}
 
 export interface ITrophyGroup extends TrophyGroup {
@@ -47,14 +50,12 @@ export class TrophyService {
   }
 
   public async initialize() {
-    if (!!this.authorization) {
-      return;
-    }
-
+    // if (!this.authorization) {
+    //   console.log("get persisted authorization");
     this.authorization = this.getPersistentAuthorization();
+    // }
 
     const now = new Date();
-    now.setHours(new Date().getHours() + 2);
     const nowTime = now.getTime();
     const expirationDateTime = new Date(
       this.authorization?.expirationDate ?? "01-01-1970"
@@ -62,6 +63,10 @@ export class TrophyService {
     const refreshExpirationDateTime = new Date(
       this.authorization?.refreshExpirationDate ?? "01-01-1970"
     ).getTime();
+
+    console.log(now, this.authorization?.expirationDate);
+    console.log(nowTime, expirationDateTime);
+    console.log(new Date(nowTime), new Date(expirationDateTime));
 
     if (
       (expirationDateTime < nowTime && refreshExpirationDateTime < nowTime) ||
@@ -73,6 +78,7 @@ export class TrophyService {
       this.authorization = this.extendAuthorization(this.authorization);
       this.setPersistentAuthorization(this.authorization);
     } else if (expirationDateTime < nowTime) {
+      console.log("expired");
       await this.refresh();
     }
   }
@@ -89,6 +95,8 @@ export class TrophyService {
       oldAuthorization.refreshToken
     );
 
+    console.log("new tokens");
+
     this.authorization = this.extendAuthorization(this.authorization);
     this.setPersistentAuthorization(this.authorization);
   }
@@ -96,6 +104,7 @@ export class TrophyService {
   private getPersistentAuthorization(): AuthTokensResponse | undefined {
     try {
       const data = fs.readFileSync("keys.json");
+      console.log("data from file", JSON.parse(data.toString()));
 
       return JSON.parse(data.toString()) as AuthTokensResponse;
     } catch (e) {

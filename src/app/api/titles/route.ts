@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import trophyService from "~/services/TrophyService";
 
+export const revalidate = 0;
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
 
