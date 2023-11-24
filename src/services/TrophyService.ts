@@ -50,10 +50,9 @@ export class TrophyService {
   }
 
   public async initialize() {
-    // if (!this.authorization) {
-    //   console.log("get persisted authorization");
-    this.authorization = this.getPersistentAuthorization();
-    // }
+    if (!this.authorization) {
+      this.authorization = this.getPersistentAuthorization();
+    }
 
     const now = new Date();
     const nowTime = now.getTime();
@@ -74,7 +73,6 @@ export class TrophyService {
       this.authorization = this.extendAuthorization(this.authorization);
       this.setPersistentAuthorization(this.authorization);
     } else if (expirationDateTime < nowTime) {
-      console.log("expired");
       await this.refresh();
     }
   }
@@ -98,11 +96,9 @@ export class TrophyService {
   private getPersistentAuthorization(): AuthTokensResponse | undefined {
     try {
       const data = fs.readFileSync("/var/tmp/keys.json");
-      console.log("data from file", JSON.parse(data.toString()));
 
       return JSON.parse(data.toString()) as AuthTokensResponse;
     } catch (e) {
-      console.log(e, "why can't we read the file?");
       return undefined;
     }
   }

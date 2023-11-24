@@ -21,7 +21,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   try {
-    await TrophyService.refresh();
+    await TrophyService.initialize();
   } catch (e) {
     console.log(e);
   }
