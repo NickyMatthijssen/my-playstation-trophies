@@ -64,10 +64,6 @@ export class TrophyService {
       this.authorization?.refreshExpirationDate ?? "01-01-1970"
     ).getTime();
 
-    console.log(now, this.authorization?.expirationDate);
-    console.log(nowTime, expirationDateTime);
-    console.log(new Date(nowTime), new Date(expirationDateTime));
-
     if (
       (expirationDateTime < nowTime && refreshExpirationDateTime < nowTime) ||
       !this.authorization
