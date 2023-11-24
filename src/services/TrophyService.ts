@@ -91,8 +91,6 @@ export class TrophyService {
       oldAuthorization.refreshToken
     );
 
-    console.log("new tokens");
-
     this.authorization = this.extendAuthorization(this.authorization);
     this.setPersistentAuthorization(this.authorization);
   }
