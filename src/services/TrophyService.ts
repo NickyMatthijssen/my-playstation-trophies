@@ -102,7 +102,7 @@ export class TrophyService {
 
       return JSON.parse(data.toString()) as AuthTokensResponse;
     } catch (e) {
-      console.log("why can't we read the file?");
+      console.log(e, "why can't we read the file?");
       return undefined;
     }
   }
