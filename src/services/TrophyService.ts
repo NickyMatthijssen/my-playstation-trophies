@@ -103,7 +103,7 @@ export class TrophyService {
 
   private getPersistentAuthorization(): AuthTokensResponse | undefined {
     try {
-      const data = fs.readFileSync("keys.json");
+      const data = fs.readFileSync("/var/tmp/keys.json");
       console.log("data from file", JSON.parse(data.toString()));
 
       return JSON.parse(data.toString()) as AuthTokensResponse;
@@ -113,7 +113,7 @@ export class TrophyService {
   }
 
   private setPersistentAuthorization(authorization: AuthTokensResponse): void {
-    fs.writeFileSync("keys.json", JSON.stringify(authorization));
+    fs.writeFileSync("/var/tmp/keys.json", JSON.stringify(authorization));
   }
 
   private extendAuthorization(
