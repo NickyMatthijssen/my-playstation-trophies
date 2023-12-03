@@ -1,5 +1,5 @@
 import { TitleList } from "~/components/TitleList";
-import trophyService from "~/services/TrophyService";
+import { trophyService } from "~/services";
 
 export default async function TitlesPage() {
   const response = await trophyService.getTitles();

@@ -15,7 +15,7 @@ export default function Loading() {
           <GroupHeaderSkeleton />
 
           <div className="space-y-6 mt-6 pb-6">
-            {Array.from(new Array(20)).map((index) => (
+            {Array.from(new Array(20)).map((_, index) => (
               <TrophySkeleton key={index} />
             ))}
           </div>

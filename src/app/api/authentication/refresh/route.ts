@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
-import trophyService from "~/services/TrophyService";
+import { tokenService } from "~/services";
 
 export async function POST() {
   let success = true;
 
   try {
-    await trophyService.refresh();
+    await tokenService.authorize();
   } catch (_) {
     success = false;
   }

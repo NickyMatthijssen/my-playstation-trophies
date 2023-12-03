@@ -1,4 +1,5 @@
-import TrophyService, { ITrophyGroup } from "~/services/TrophyService";
+import { trophyService } from "~/services";
+import { ITrophyGroup } from "~/services";
 import DefinedTrophies from "./DefinedTrophies";
 import Icon from "./Icon";
 import { PlatinumTrophy } from "./PlatinumTrophy";
@@ -8,7 +9,7 @@ type Props = {
 };
 
 export function GroupHeader({ group }: Props) {
-  const earnedTrophies = TrophyService.getEarnedTrophiesByGroup(group);
+  const earnedTrophies = trophyService.getEarnedTrophiesByGroup(group);
 
   return (
     <div className="flex w-full px-4 py-6 relative space-x-4">

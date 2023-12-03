@@ -1,7 +1,4 @@
 import {
-  AuthTokensResponse as PsnAuthTokensResponse,
-  exchangeCodeForAccessToken,
-  exchangeNpssoForCode,
   getTitleTrophies,
   getTitleTrophyGroups,
   getUserTitles,
@@ -13,16 +10,9 @@ import {
   UserThinTrophy,
   UserTitlesResponse,
   UserTrophiesEarnedForTitleResponse,
-  exchangeRefreshTokenForAuthTokens,
 } from "psn-api";
 import { TrophyGroup } from "psn-api/dist/models/trophy-group.model";
-import fs from "fs";
-
-declare let process: {
-  env: {
-    NPSSO: string;
-  };
-};
+import { TokenService, AuthTokensResponse } from "./TokenService";
 
 export const revalidate = 0;
 export const dynamic = "force-dynamic";
@@ -35,101 +25,25 @@ export interface ITrophyGroup extends TrophyGroup {
 
 export type Platform = "trophy" | "trophy2" | undefined;
 
-export interface AuthTokensResponse extends PsnAuthTokensResponse {
-  expirationDate?: string;
-  refreshExpirationDate?: string;
-}
-
 export class TrophyService {
-  private npsso: string;
+  private tokenService: TokenService;
+
   private accessCode?: string;
   private authorization?: AuthTokensResponse;
 
-  constructor(npsso: string) {
-    this.npsso = npsso;
-  }
-
-  public async initialize() {
-    if (!this.authorization) {
-      this.authorization = this.getPersistentAuthorization();
-    }
-
-    const now = new Date();
-    const nowTime = now.getTime();
-    const expirationDateTime = new Date(
-      this.authorization?.expirationDate ?? "01-01-1970"
-    ).getTime();
-    const refreshExpirationDateTime = new Date(
-      this.authorization?.refreshExpirationDate ?? "01-01-1970"
-    ).getTime();
-
-    if (
-      (expirationDateTime < nowTime && refreshExpirationDateTime < nowTime) ||
-      !this.authorization
-    ) {
-      this.accessCode = await exchangeNpssoForCode(this.npsso);
-      this.authorization = await exchangeCodeForAccessToken(this.accessCode);
-
-      this.authorization = this.extendAuthorization(this.authorization);
-      this.setPersistentAuthorization(this.authorization);
-    } else if (expirationDateTime < nowTime) {
-      await this.refresh();
-    }
-  }
-
-  public async refresh() {
-    const oldAuthorization =
-      this.authorization ?? this.getPersistentAuthorization();
-
-    if (!oldAuthorization) {
-      throw new Error("Can't retrieve new tokens");
-    }
-
-    this.authorization = await exchangeRefreshTokenForAuthTokens(
-      oldAuthorization.refreshToken
-    );
-
-    this.authorization = this.extendAuthorization(this.authorization);
-    this.setPersistentAuthorization(this.authorization);
-  }
-
-  private getPersistentAuthorization(): AuthTokensResponse | undefined {
-    try {
-      const data = fs.readFileSync("/var/tmp/keys.json");
-
-      return JSON.parse(data.toString()) as AuthTokensResponse;
-    } catch (e) {
-      return undefined;
-    }
-  }
-
-  private setPersistentAuthorization(authorization: AuthTokensResponse): void {
-    fs.writeFileSync("/var/tmp/keys.json", JSON.stringify(authorization));
-  }
-
-  private extendAuthorization(
-    authorization: AuthTokensResponse
-  ): AuthTokensResponse {
-    const now = new Date();
-
-    authorization.expirationDate = new Date(
-      now.getTime() + authorization.expiresIn * 1000
-    ).toISOString();
-
-    authorization.refreshExpirationDate = new Date(
-      now.getTime() + authorization.refreshTokenExpiresIn * 1000
-    ).toISOString();
-
-    return authorization;
+  constructor(tokenService: TokenService) {
+    this.tokenService = tokenService;
   }
 
   public async getTitles(offset: number = 0): Promise<UserTitlesResponse> {
     if (!this.accessCode || !this.authorization) {
-      await this.initialize();
+      // await this.initialize();
+      await this.tokenService.authorize();
     }
 
     return await getUserTitles(
-      { accessToken: this.authorization?.accessToken ?? "" },
+      // { accessToken: this.authorization?.accessToken ?? "" },
+      { accessToken: this.tokenService.authorization?.accessToken ?? "" },
       "me",
       { offset }
     );
@@ -155,11 +69,13 @@ export class TrophyService {
     platform: Platform
   ): Promise<TitleTrophiesResponse> {
     if (!this.accessCode || !this.authorization) {
-      await this.initialize();
+      // await this.initialize();
+      await this.tokenService.authorize();
     }
 
     const response = await getTitleTrophies(
-      this?.authorization ?? ({} as AuthTokensResponse),
+      // this?.authorization ?? ({} as AuthTokensResponse),
+      this.tokenService?.authorization ?? ({} as AuthTokensResponse),
       id,
       "all",
       {
@@ -180,11 +96,13 @@ export class TrophyService {
     platform: Platform
   ): Promise<UserTrophiesEarnedForTitleResponse> {
     if (!this.accessCode || !this.authorization) {
-      await this.initialize();
+      // await this.initialize();
+      await this.tokenService.authorize();
     }
 
     const response = await getUserTrophiesEarnedForTitle(
-      this.authorization ?? ({} as AuthTokensResponse),
+      // this.authorization ?? ({} as AuthTokensResponse),
+      this.tokenService.authorization ?? ({} as AuthTokensResponse),
       "me",
       id,
       "all",
@@ -206,11 +124,11 @@ export class TrophyService {
     platform: Platform
   ): Promise<TitleTrophyGroupsResponse> {
     if (!this.accessCode || !this.authorization) {
-      await this.initialize();
+      await this.tokenService.authorize();
     }
 
     const response = await getTitleTrophyGroups(
-      this.authorization ?? ({} as AuthTokensResponse),
+      this.tokenService.authorization ?? ({} as AuthTokensResponse),
       id,
       {
         npServiceName: platform,
@@ -289,5 +207,3 @@ export class TrophyService {
     return undefined;
   }
 }
-
-export default new TrophyService(process.env.NPSSO);

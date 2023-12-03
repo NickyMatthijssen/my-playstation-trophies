@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { BackButton } from "~/components/BackButton";
 import { GroupHeader } from "~/components/GroupHeader";
 import Trophy from "~/components/Trophy";
-import trophyService from "~/services/TrophyService";
+import { trophyService } from "~/services";
 
 export default async function TitleSidePage({ params: { id } }: any) {
   const groups = await trophyService.getGroupedTrophies(id);

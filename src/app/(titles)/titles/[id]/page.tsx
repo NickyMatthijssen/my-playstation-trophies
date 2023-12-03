@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GroupHeader } from "~/components/GroupHeader";
 import Trophy from "~/components/Trophy";
-import trophyService from "~/services/TrophyService";
+import { trophyService } from "~/services";
 
 export default async function TitlePage({ params: { id } }: any) {
   const groups = await trophyService.getGroupedTrophies(id);

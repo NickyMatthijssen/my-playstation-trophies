@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import trophyService from "~/services/TrophyService";
+import { trophyService } from "~/services";
 
 export const revalidate = 0;
 
