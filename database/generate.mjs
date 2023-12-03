@@ -15,9 +15,11 @@ client.serialize(() => {
         refreshExpirationDate TEXT
       )`,
     (error) => {
-      if (!error) return;
+      if (error) {
+        console.error(error);
+      }
 
-      console.error(error);
+      console.log("Database was generated if it didn't exist before...");
     }
   );
 });
