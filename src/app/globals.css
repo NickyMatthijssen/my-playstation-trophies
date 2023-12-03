@@ -28,4 +28,8 @@
   .border-l {
     @apply border-neutral-700;
   }
+
+  .h-screen {
+    @apply h-[100dvh];
+  }
 }

@@ -12,7 +12,7 @@ export function GroupHeader({ group }: Props) {
   const earnedTrophies = trophyService.getEarnedTrophiesByGroup(group);
 
   return (
-    <div className="flex w-full px-4 py-6 relative space-x-4">
+    <div className="flex w-full px-4 py-6 relative space-x-4 z-0">
       <div>
         <Icon url={group.trophyGroupIconUrl} />
       </div>
@@ -24,7 +24,7 @@ export function GroupHeader({ group }: Props) {
           </h2>
         </div>
 
-        <div className="flex flex-shrink-0 items-center space-x-4">
+        <div className="flex flex-shrink-0 items-center space-x-4 mb-2">
           <div>
             <PlatinumTrophy trophies={earnedTrophies} />
           </div>

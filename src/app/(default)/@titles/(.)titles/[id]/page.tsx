@@ -12,7 +12,7 @@ export default async function TitleSidePage({ params: { id } }: any) {
   }
 
   return (
-    <div className="overflow-hidden mx-auto h-full">
+    <div className="overflow-hidden mx-auto min-h-full">
       <div className="px-4 py-6 border-b flex items-center space-x-4">
         <div className="block xl:hidden">
           <BackButton />
@@ -25,7 +25,7 @@ export default async function TitleSidePage({ params: { id } }: any) {
           <div key={group.trophyGroupId}>
             <GroupHeader group={group} />
 
-            <div className="space-y-6 mt-6 pb-24">
+            <div className="space-y-6 mt-6 pb-6">
               {group.trophies.map((trophy) => (
                 <Trophy trophy={trophy} key={trophy.trophyId} />
               ))}
