@@ -10,7 +10,7 @@ export const metadata: Metadata = {
     "A collection of the trophies i've earned over the years on playstation",
 };
 
-export const revalidate = 60;
+export const revalidate = 0;
 
 export default async function RootLayout({
   children,
