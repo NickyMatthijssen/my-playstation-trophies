@@ -11,8 +11,8 @@ export default function LazyScroll({ children, callback }: Props) {
     if (!ref.current) return;
 
     if (
-      ref.current.scrollHeight >=
-      ref.current.scrollTop - ref.current.offsetHeight
+      ref.current.scrollTop + ref.current.offsetHeight >=
+      ref.current.scrollHeight - 2000
     ) {
       callback();
     }

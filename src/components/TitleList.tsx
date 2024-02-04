@@ -1,53 +1,39 @@
 "use client";
 
 import { TrophyTitle, UserTitlesResponse } from "psn-api";
-import { useRef, useState } from "react";
 import LazyScroll from "./LazyScroll";
 import Title from "./Title";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
-type Props = {
-  defaultTitles: TrophyTitle[];
-  nextOffset?: number;
-};
+export function TitleList() {
+  const { data, fetchNextPage, isFetching } = useInfiniteQuery({
+    queryKey: ["title"],
+    queryFn: async ({ pageParam }) => {
+      if (isFetching) {
+      }
 
-export function TitleList({ defaultTitles, nextOffset = 0 }: Props) {
-  const isFetching = useRef(false);
+      const response = await fetch(`/api/titles?offset=${pageParam}`);
+      return (await response.json()) as UserTitlesResponse;
+    },
+    initialPageParam: 0,
+    getNextPageParam: (page: UserTitlesResponse) => page.nextOffset,
+  });
 
-  const [titles, setTitles] = useState(defaultTitles);
-  const [offset, setOffset] = useState(nextOffset);
-  const [hasMore, setHasMore] = useState(true);
-  const [debounce, setDebounce] = useState<NodeJS.Timeout>();
-
-  async function onEndOfList() {
-    if (!hasMore || isFetching.current) return;
-
-    isFetching.current = true;
-
-    if (debounce) {
-      clearTimeout(debounce);
-      setDebounce(undefined);
+  const onEndOfList = () => {
+    if (isFetching) {
       return;
     }
 
-    const timeout = setTimeout(async () => {
-      const response = await fetch(`/api/titles?offset=${offset}`);
-      const json = (await response.json()) as UserTitlesResponse;
-
-      setTitles((titles) => [...titles, ...json.trophyTitles]);
-      setOffset(json.nextOffset ?? json.totalItemCount);
-      setHasMore(!!json.nextOffset);
-
-      isFetching.current = false;
-    }, 500);
-
-    setDebounce(timeout);
-  }
+    fetchNextPage();
+  };
 
   return (
     <LazyScroll callback={onEndOfList}>
-      {titles.map((title) => (
-        <Title title={title} key={title.npCommunicationId} />
-      ))}
+      {data?.pages.map((page) =>
+        page.trophyTitles.map((title: TrophyTitle) => (
+          <Title title={title} key={title.npCommunicationId} />
+        ))
+      )}
     </LazyScroll>
   );
 }

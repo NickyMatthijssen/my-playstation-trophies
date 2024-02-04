@@ -42,7 +42,6 @@ export class TrophyService {
     }
 
     return await getUserTitles(
-      // { accessToken: this.authorization?.accessToken ?? "" },
       { accessToken: this.tokenService.authorization?.accessToken ?? "" },
       "me",
       { offset }
