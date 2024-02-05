@@ -6,14 +6,16 @@ export function useElementScroll<T extends HTMLElement>(callback: Function) {
   const handler = (event: Event) => callback(event);
 
   useEffect(() => {
-    if (!ref.current) return;
+    const { current } = ref;
 
-    ref.current.addEventListener("scroll", handler);
+    if (!current) return;
+
+    current.addEventListener("scroll", handler);
 
     return () => {
-      if (!ref.current) return;
+      if (!current) return;
 
-      ref.current.removeEventListener("scroll", handler);
+      current.removeEventListener("scroll", handler);
     };
   });
 

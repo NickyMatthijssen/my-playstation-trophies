@@ -15,11 +15,14 @@ const nextConfig = {
     ];
   },
   images: {
-    unoptimized: true,
     remotePatterns: [
       {
         protocol: "https",
         hostname: "psnobj.prod.dl.playstation.net",
+      },
+      {
+        protocol: "https",
+        hostname: "image.api.playstation.com",
       },
     ],
   },

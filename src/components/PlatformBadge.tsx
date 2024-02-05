@@ -5,7 +5,7 @@ type PlatformBadgeProps = {
 };
 
 export function PlatformBadge({ platform }: PlatformBadgeProps) {
-  const platforms = useMemo<string[]>(() => platform.split(","), []);
+  const platforms = useMemo<string[]>(() => platform.split(","), [platform]);
 
   return (
     <div className="group space-y-1">

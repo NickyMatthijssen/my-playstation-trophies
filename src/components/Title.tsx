@@ -17,6 +17,7 @@ export default function Title({ title }: Props) {
         <Icon
           url={title.trophyTitleIconUrl}
           float={<PlatformBadge platform={title.trophyTitlePlatform} />}
+          alt={title.trophyTitleName}
         />
       </div>
 

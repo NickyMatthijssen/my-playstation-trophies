@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { TrophyCounts } from "psn-api";
 
 type Props = {
@@ -10,9 +11,9 @@ export function PlatinumTrophy({ trophies }: Props) {
   }
 
   return (
-    <img
+    <Image
       src="/platinum-trophy.png"
-      alt="Platinum"
+      alt="Platinum trophy"
       width={76}
       height={92}
       className="object-contain"

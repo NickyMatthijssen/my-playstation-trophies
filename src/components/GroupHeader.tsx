@@ -14,7 +14,7 @@ export function GroupHeader({ group }: Props) {
   return (
     <div className="flex w-full px-4 py-6 relative space-x-4 z-0">
       <div>
-        <Icon url={group.trophyGroupIconUrl} />
+        <Icon url={group.trophyGroupIconUrl} alt={group.trophyGroupName} />
       </div>
 
       <div className="flex flex-1 flex-col md:flex-row border-b md:items-center md:space-x-4">
