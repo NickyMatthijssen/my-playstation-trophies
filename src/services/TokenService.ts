@@ -1,10 +1,10 @@
-import { Database } from "sqlite3";
 import {
   AuthTokensResponse as PsnAuthTokensResponse,
   exchangeCodeForAccessToken,
   exchangeNpssoForCode,
   exchangeRefreshTokenForAuthTokens,
 } from "psn-api";
+import { TokenStorage } from "./TokenStorage";
 
 export interface AuthTokensResponse extends PsnAuthTokensResponse {
   expirationDate?: string;
@@ -12,7 +12,7 @@ export interface AuthTokensResponse extends PsnAuthTokensResponse {
 }
 
 export class TokenService {
-  private _client: Database;
+  private _storage: TokenStorage;
   private _npsso: string;
   private _authorization?: AuthTokensResponse;
 
@@ -20,8 +20,8 @@ export class TokenService {
     return this._authorization;
   }
 
-  constructor(client: Database, npsso: string) {
-    this._client = client;
+  constructor(storage: TokenStorage, npsso: string) {
+    this._storage = storage;
     this._npsso = npsso;
   }
 
@@ -67,20 +67,7 @@ export class TokenService {
   }
 
   public async getToken(): Promise<AuthTokensResponse | undefined> {
-    return new Promise((resolve, reject) => {
-      this._client.get(
-        `
-      SELECT * FROM tokens;
-    `,
-        (error?: Error, row?: AuthTokensResponse) => {
-          if (error) {
-            return reject(error);
-          }
-
-          return resolve(row);
-        }
-      );
-    });
+    return this._storage.get();
   }
 
   public async setToken(psnAuthorization: PsnAuthTokensResponse) {
@@ -98,20 +85,6 @@ export class TokenService {
 
     this._authorization = authorization;
 
-    this._client.serialize(() => {
-      this._client.run(`
-      DELETE FROM tokens
-      WHERE 1
-    `);
-
-      this._client.run(
-        `
-      INSERT INTO tokens (accessToken, expiresIn, idToken, refreshToken, refreshTokenExpiresIn, scope, tokenType, expirationDate, refreshExpirationDate)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `,
-        [...Object.values(authorization)],
-        (err) => console.log(err)
-      );
-    });
+    this._storage.set(authorization);
   }
 }

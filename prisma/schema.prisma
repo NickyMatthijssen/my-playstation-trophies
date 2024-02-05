@@ -1,0 +1,21 @@
+datasource sqlite {
+    provider = "sqlite"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Keys {
+    id                      Int @id @default(autoincrement())
+    accessToken             String
+    expiresIn               Int
+    idToken                 String
+    refreshToken            String
+    refreshTokenExpiresIn   Int
+    scope                   String
+    tokenType               String
+    expirationDate          String? 
+    refreshExpirationDate   String?
+}
