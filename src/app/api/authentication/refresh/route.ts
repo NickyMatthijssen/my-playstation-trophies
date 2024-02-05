@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { tokenService } from "~/services";
 
-export async function POST() {
+export async function GET() {
   let success = true;
 
   try {
