@@ -30,7 +30,7 @@ export function TitleList() {
   return (
     <LazyScroll callback={onEndOfList}>
       {data?.pages.map((page) =>
-        page.trophyTitles.map((title: TrophyTitle) => (
+        page.trophyTitles?.map((title: TrophyTitle) => (
           <Title title={title} key={title.npCommunicationId} />
         ))
       )}

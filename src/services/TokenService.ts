@@ -32,6 +32,8 @@ export class TokenService {
 
     // Authorize the api by getting the token.
     const now = new Date();
+    // Lazy fix for expiration datetime.
+    now.setTime(now.getTime() + 1 * 60 * 60 * 1000);
     const nowTime = now.getTime();
     const expirationDateTime = new Date(
       this.authorization?.expirationDate ?? "01-01-1970"
