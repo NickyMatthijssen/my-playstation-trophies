@@ -136,6 +136,7 @@ export class TrophyService {
 
     // @ts-ignore
     if (response.error) {
+      console.log(response, this.tokenService.authorization);
       throw new Error("Resource doesn't exist");
     }
 

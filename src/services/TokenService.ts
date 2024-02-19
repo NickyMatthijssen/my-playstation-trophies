@@ -37,7 +37,8 @@ export class TokenService {
     const nowTime = now.getTime();
     const expirationDateTime = new Date(
       this.authorization?.expirationDate ?? "01-01-1970"
-    ).getTime();
+    );
+    expirationDateTime.setTime(now.getTime() - 1 * 60 * 60 * 1000);
     const refreshExpirationDateTime = new Date(
       this.authorization?.refreshExpirationDate ?? "01-01-1970"
     ).getTime();
@@ -45,7 +46,8 @@ export class TokenService {
     // Check if a new token should be fetched, this only happens if there is no authorization found
     // or if the token and refresh token are both expired.
     if (
-      (expirationDateTime < nowTime && refreshExpirationDateTime < nowTime) ||
+      (expirationDateTime.getTime() < nowTime &&
+        refreshExpirationDateTime < nowTime) ||
       !this.authorization
     ) {
       const accessCode = await exchangeNpssoForCode(this._npsso);
@@ -54,7 +56,7 @@ export class TokenService {
       this.setToken(psnAuthorization);
     }
     // If the token is expired we refresh the token through the refresh token.
-    else if (expirationDateTime < nowTime) {
+    else if (expirationDateTime.getTime() < nowTime) {
       // Or if the token should be refreshed.
       await this.refresh();
     }
