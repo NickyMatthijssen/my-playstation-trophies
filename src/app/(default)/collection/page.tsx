@@ -1,25 +1,14 @@
-import { TitleList } from "~/components/TitleList";
-import { trophyService } from "~/services";
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
-import { UserTitlesResponse } from "psn-api";
+import {titleRepository} from "~/services";
+import Title from "~/components/Title";
+import {TrophyTitle} from "psn-api";
+import {WithId} from "mongodb";
 
 export default async function TitlesPage() {
-  const client = new QueryClient();
+    const titles = await titleRepository.findAllOrderedByUpdatedDate();
 
-  await client.fetchInfiniteQuery({
-    queryKey: ["title"],
-    queryFn: ({ pageParam }) => trophyService.getTitles(pageParam),
-    initialPageParam: 0,
-    getNextPageParam: (page: UserTitlesResponse) => page.nextOffset,
-  });
-
-  return (
-    <HydrationBoundary state={dehydrate(client)}>
-      <TitleList />
-    </HydrationBoundary>
-  );
+    return (
+        <div className="h-full overflow-auto">
+            {titles.map((title: WithId<TrophyTitle>) => <Title title={title} key={title.npCommunicationId} />)}
+        </div>
+    );
 }

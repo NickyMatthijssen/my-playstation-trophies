@@ -3,35 +3,35 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^5.9.1",
-    "@tanstack/react-query": "^5.18.1",
-    "@vercel/kv": "^1.0.1",
-    "clsx": "^2.0.0",
-    "dayjs": "^1.11.10",
-    "dotenv": "^16.3.1",
-    "next": "14.1.0",
-    "psn-api": "^2.10.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "sharp": "^0.33.2",
-    "tailwindcss": "3.3.3"
+    "bullmq": "^5.56.0",
+    "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
+    "dotenv": "^16.6.1",
+    "ioredis": "^5.6.1",
+    "mongodb": "^6.17.0",
+    "next": "^15.3.4",
+    "psn-api": "^2.14.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "sharp": "^0.34.2"
   },
   "devDependencies": {
-    "@tanstack/eslint-plugin-query": "^5.18.1",
-    "@types/node": "20.4.2",
-    "@types/react": "18.2.15",
-    "@types/react-dom": "18.2.7",
-    "autoprefixer": "10.4.14",
+    "@tailwindcss/postcss": "^4.1.11",
+    "@types/node": "^24.0.5",
+    "@types/react": "19.1.8",
+    "@types/react-dom": "19.1.6",
     "encoding": "^0.1.13",
-    "eslint": "8.45.0",
-    "eslint-config-next": "14.1.0",
-    "postcss": "^8.4.33",
-    "typescript": "5.1.6"
+    "eslint": "9.29.0",
+    "eslint-config-next": "^15.3.4",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.11",
+    "tsx": "^4.20.3",
+    "typescript": "5.8.3"
   }
 }

@@ -1,38 +1,46 @@
-import { notFound } from "next/navigation";
-import { BackButton } from "~/components/BackButton";
-import { GroupHeader } from "~/components/GroupHeader";
+import {notFound} from "next/navigation";
+import {BackButton} from "./back-button";
+import {GroupHeader} from "~/components/GroupHeader";
 import Trophy from "~/components/Trophy";
-import { trophyService } from "~/services";
+import {ITrophyGroup, titleRepository, trophyGroupRepository} from "~/services";
+import {WithId} from "mongodb";
 
-export default async function TitleSidePage({ params: { id } }: any) {
-  const groups = await trophyService.getGroupedTrophies(id);
+type Props = {
+    params: Promise<{ id: string }>,
+}
 
-  if (!groups) {
-    notFound();
-  }
+export default async function TitleSidePage({ params }: Props) {
+    const { id } = await params;
 
-  return (
-    <div className="overflow-hidden mx-auto min-h-full">
-      <div className="px-4 py-6 border-b flex items-center space-x-4">
-        <div className="block xl:hidden">
-          <BackButton />
-        </div>
+    const title = await titleRepository.findOneByNpCommunicationId(id);
+    if (!title) {
+        return notFound();
+    }
 
-        <h1>{groups[0].trophyGroupName}</h1>
-      </div>
-      <div className="overflow-auto h-full space-y-12">
-        {groups.map((group) => (
-          <div key={group.trophyGroupId}>
-            <GroupHeader group={group} />
+    const groups = await trophyGroupRepository.findAllByNpCommunicationId(id);
 
-            <div className="space-y-6 mt-6 pb-6">
-              {group.trophies.map((trophy) => (
-                <Trophy trophy={trophy} key={trophy.trophyId} />
-              ))}
+    return (
+        <div className="overflow-hidden mx-auto min-h-full">
+            <div className="px-4 py-6 border-b flex items-center space-x-4">
+                <div className="block xl:hidden">
+                    <BackButton/>
+                </div>
+
+                <h1>{title.trophyTitleName}</h1>
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+            <div className="overflow-auto h-full space-y-12">
+                {groups.map((group: WithId<ITrophyGroup>) => (
+                    <div key={group.trophyGroupId}>
+                        <GroupHeader group={group}/>
+
+                        <div className="space-y-6 mt-6 pb-6">
+                            {group.trophies.map((trophy) => (
+                                <Trophy trophy={trophy} key={trophy.trophyId}/>
+                            ))}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
 }

@@ -1,6 +1,18 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-neutral-700, currentcolor);
+  }
+}
+
+@utility h-screen {
+  @apply h-dvh;
+}
 
 @layer base {
   body {
@@ -17,19 +29,5 @@
 
   *::-webkit-scrollbar-thumb {
     @apply bg-neutral-600 rounded-2xl;
-  }
-}
-
-@layer utilities {
-  .border,
-  .border-b,
-  .border-t,
-  .border-r,
-  .border-l {
-    @apply border-neutral-700;
-  }
-
-  .h-screen {
-    @apply h-[100dvh];
   }
 }

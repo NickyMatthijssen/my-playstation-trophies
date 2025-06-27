@@ -6,7 +6,7 @@ import {
   TitleThinTrophy,
   TitleTrophiesResponse,
   TitleTrophyGroupsResponse,
-  TrophyCounts,
+  TrophyCounts, TrophyTitle,
   UserThinTrophy,
   UserTitlesResponse,
   UserTrophiesEarnedForTitleResponse,
@@ -26,6 +26,8 @@ export interface ITrophyGroup extends TrophyGroup {
 export type Platform = "trophy" | "trophy2" | undefined;
 
 export class TrophyService {
+  public readonly PAGE_SIZE = 100;
+
   private tokenService: TokenService;
 
   private accessCode?: string;
@@ -33,6 +35,13 @@ export class TrophyService {
 
   constructor(tokenService: TokenService) {
     this.tokenService = tokenService;
+  }
+
+  public async initialize() {
+    if (!this.accessCode || !this.authorization) {
+      // await this.initialize();
+      await this.tokenService.authorize();
+    }
   }
 
   public async getTitles(offset: number = 0): Promise<UserTitlesResponse> {
@@ -205,5 +214,19 @@ export class TrophyService {
     }
 
     return undefined;
+  }
+
+  public async *getAllTitles(): AsyncGenerator<TrophyTitle>
+  {
+    let nextOffset: undefined|number = 0;
+
+    do {
+      const titles = await this.getTitles(nextOffset);
+      nextOffset = titles.nextOffset;
+
+      for (const title of titles.trophyTitles) {
+        yield title;
+      }
+    } while (nextOffset !== undefined);
   }
 }
