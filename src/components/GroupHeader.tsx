@@ -1,5 +1,5 @@
-import { trophyService } from "~/services";
-import { ITrophyGroup } from "~/services";
+import { trophyService } from "~/service-provider";
+import { ITrophyGroup } from "~/service-provider";
 import DefinedTrophies from "./DefinedTrophies";
 import Icon from "./Icon";
 import { PlatinumTrophy } from "./PlatinumTrophy";

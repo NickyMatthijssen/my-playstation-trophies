@@ -4,15 +4,16 @@ import {
   exchangeNpssoForCode,
   exchangeRefreshTokenForAuthTokens,
 } from "psn-api";
-import { TokenStorage } from "./TokenStorage";
+import { ITokenStorage } from "../types/token-storage.interface";
 
 export interface AuthTokensResponse extends PsnAuthTokensResponse {
   expirationDate?: string;
   refreshExpirationDate?: string;
 }
 
+// TODO:: Rewrite entire token service...
 export class TokenService {
-  private _storage: TokenStorage;
+  private _storage: ITokenStorage;
   private _npsso: string;
   private _authorization?: AuthTokensResponse;
 
@@ -20,7 +21,7 @@ export class TokenService {
     return this._authorization;
   }
 
-  constructor(storage: TokenStorage, npsso: string) {
+  constructor(storage: ITokenStorage, npsso: string) {
     this._storage = storage;
     this._npsso = npsso;
   }

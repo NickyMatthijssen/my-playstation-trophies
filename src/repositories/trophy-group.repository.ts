@@ -1,5 +1,5 @@
 import {Db, WithId} from "mongodb";
-import {ITrophyGroup} from "~/services";
+import {ITrophyGroup} from "~/service-provider";
 import {AbstractRepository} from "~/repositories/abstract.repository";
 
 export class TrophyGroupRepository extends AbstractRepository<ITrophyGroup> {

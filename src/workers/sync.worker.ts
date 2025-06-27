@@ -1,13 +1,13 @@
 import {Job, Worker} from "bullmq";
 import {QueueName} from "~/enums/queue-name.enum";
 import {JobName} from "~/enums/job-name.enum";
-import {jobRegistryService} from "~/services";
+import {jobHandlerRegistryService} from "~/service-provider";
 import {syncConnection} from "~/queue/sync.queue";
 
 export const syncWorker = new Worker(
     QueueName.Sync,
     async (job: Job<any, any, JobName>) => {
-        const jobHandler = jobRegistryService.get(job.name);
+        const jobHandler = jobHandlerRegistryService.get(job.name);
         if (!jobHandler) {
             throw new Error(`No job handler found for job ${job.name}`);
         }
@@ -26,9 +26,9 @@ export const syncWorker = new Worker(
 syncWorker.on('ready', () => console.log(`[INIT] Sync queue worker ready...`));
 
 syncWorker.on('completed', job => {
-    console.log(`Job ${job.id} has completed`);
+    console.log(`[PROCESSED] Job ${job.id} has completed`);
 });
 
 syncWorker.on('failed', (job, err) => {
-    console.log(`Job ${job?.id} has failed with message: "${err.message}"`);
+    console.log(`[ERROR] Job ${job?.id} has failed with message: "${err.message}"`);
 });

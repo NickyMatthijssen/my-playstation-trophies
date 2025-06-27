@@ -25,6 +25,7 @@ export interface ITrophyGroup extends TrophyGroup {
 
 export type Platform = "trophy" | "trophy2" | undefined;
 
+// TODO: Rewrite entire trophy service
 export class TrophyService {
   public readonly PAGE_SIZE = 100;
 

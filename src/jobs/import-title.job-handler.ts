@@ -1,17 +1,15 @@
-import {AbstractHandlerJob, IJobHandler} from "~/jobs/abstract-handler.job";
 import {JobName} from "~/enums/job-name.enum";
 import {TrophyTitle} from "psn-api";
 import {Collection, Db} from "mongodb";
-import {ITrophyGroup, TrophyService} from "~/services";
+import {ITrophyGroup, TrophyService} from "~/services/TrophyService";
+import {IJobHandler} from "~/types/job-handler.interface";
 
-export class ImportTitleJob extends AbstractHandlerJob implements IJobHandler {
+export class ImportTitleJobHandler implements IJobHandler {
     private readonly _titlesCollection: Collection<TrophyTitle>;
     private readonly _groupsCollection: Collection<{npCommunicationId: string, groups: ITrophyGroup[]}>;
     private readonly _trophyService: TrophyService;
 
     constructor(database: Db, trophyService: TrophyService) {
-        super();
-
         this._titlesCollection = database.collection('titles');
         this._groupsCollection = database.collection('groups');
         this._trophyService = trophyService;

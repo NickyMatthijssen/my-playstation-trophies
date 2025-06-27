@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { tokenService } from "~/services";
+import { tokenService } from "~/service-provider";
 
 export async function GET() {
   let success = true;

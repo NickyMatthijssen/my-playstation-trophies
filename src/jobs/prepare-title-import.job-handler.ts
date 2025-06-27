@@ -1,27 +1,25 @@
-import {AbstractHandlerJob, IJobHandler} from "~/jobs/abstract-handler.job";
 import {JobName} from "~/enums/job-name.enum";
-import {TrophyService} from "~/services";
 import {syncQueue} from "~/queue/sync.queue";
 import {MongoClient} from "mongodb";
+import {TrophyService} from "~/services/TrophyService";
+import {IJobHandler} from "~/types/job-handler.interface";
 
 const DELAY_INTERVAL_IN_MILLISECONDS: number = 60 * 1000;
 
-export class PrepareTitleImportJob extends AbstractHandlerJob implements IJobHandler {
+export class PrepareTitleImportJobHandler implements IJobHandler {
     private readonly _mongoClient: MongoClient;
     private readonly _trophyService: TrophyService;
 
-    constructor(mongoClient: MongoClient, trophyService: TrophyService) {
-        super();
-
+    public constructor(mongoClient: MongoClient, trophyService: TrophyService) {
         this._mongoClient = mongoClient;
         this._trophyService = trophyService;
     }
 
-    get name(): string {
+    public get name(): string {
         return JobName.PrepareTitleImport;
     }
 
-    async handle(): Promise<void> {
+    public async handle(): Promise<void> {
         const titles = this._trophyService.getAllTitles();
 
         let insertableTitles = [];

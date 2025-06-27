@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    authInterrupts: true,
+  },
   async redirects() {
     return [
       {
@@ -25,7 +28,6 @@ const nextConfig = {
         hostname: "image.api.playstation.com",
       },
     ],
-    unoptimized: Boolean(process.env.IMAGES_UNOPTIMIZED ?? false),
   },
 };
 

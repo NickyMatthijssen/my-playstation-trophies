@@ -1,8 +1,8 @@
-import {TokenStorage} from "~/services/TokenStorage";
+import {ITokenStorage} from "~/types/token-storage.interface";
 import {AuthTokensResponse} from "~/services/TokenService";
 import {MongoClient} from "mongodb";
 
-export class MongoTokenStorage implements TokenStorage {
+export class MongoTokenStorageService implements ITokenStorage {
     private _client: MongoClient;
 
     constructor(client: MongoClient) {

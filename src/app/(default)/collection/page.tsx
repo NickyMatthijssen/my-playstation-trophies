@@ -1,4 +1,4 @@
-import {titleRepository} from "~/services";
+import {titleRepository} from "~/service-provider";
 import Title from "~/components/Title";
 import {TrophyTitle} from "psn-api";
 import {WithId} from "mongodb";

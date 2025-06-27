@@ -29,7 +29,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/services/refresh-deamon.js",
     "index.mjs"
   ],
   "exclude": ["node_modules"]
