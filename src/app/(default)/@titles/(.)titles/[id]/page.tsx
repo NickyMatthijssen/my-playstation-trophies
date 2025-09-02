@@ -2,7 +2,8 @@ import {notFound} from "next/navigation";
 import {BackButton} from "./back-button";
 import {GroupHeader} from "~/components/GroupHeader";
 import Trophy from "~/components/Trophy";
-import {ITrophyGroup, titleRepository, trophyGroupRepository} from "~/service-provider";
+import {titleRepository, trophyGroupRepository} from "~/service-provider";
+import {ITrophyGroup} from "~/services/TrophyService";
 import {WithId} from "mongodb";
 
 type Props = {

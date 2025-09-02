@@ -7,6 +7,8 @@ import { ImportTitleJobHandler } from "~/jobs/import-title.job-handler";
 import {PrepareTitleImportJobHandler} from "~/jobs/prepare-title-import.job-handler";
 import { TitleRepository } from "~/repositories/title.repository";
 import {TrophyGroupRepository} from "~/repositories/trophy-group.repository";
+import {AccessTokenRepository} from "~/repositories/access-token.repository";
+import {syncQueue} from "~/queue/sync.queue";
 
 if (undefined === process.env.MONGO_DB_CONNECTION_STRING || undefined === process.env.NPSSO) {
     throw new Error('Missing necessary environment variables.');
@@ -14,14 +16,15 @@ if (undefined === process.env.MONGO_DB_CONNECTION_STRING || undefined === proces
 
 export const mongoClient = new MongoClient(process.env.MONGO_DB_CONNECTION_STRING);
 export const mongoDatabase = mongoClient.db('psn');
+export const titleRepository = new TitleRepository(mongoDatabase);
+export const trophyGroupRepository = new TrophyGroupRepository(mongoDatabase);
+export const accessTokenRepository = new AccessTokenRepository(mongoDatabase);
 
-export const storage = new MongoTokenStorageService(mongoClient);
+export const storage = new MongoTokenStorageService(accessTokenRepository);
 export const tokenService = new TokenService(storage, process.env.NPSSO);
 export const trophyService = new TrophyService(tokenService);
 export const jobHandlerRegistryService = new JobHandlerRegistryService();
 
-jobHandlerRegistryService.register(new PrepareTitleImportJobHandler(mongoClient, trophyService));
-jobHandlerRegistryService.register(new ImportTitleJobHandler(mongoDatabase, trophyService));
+jobHandlerRegistryService.register(new PrepareTitleImportJobHandler(trophyService, titleRepository, syncQueue));
+jobHandlerRegistryService.register(new ImportTitleJobHandler(titleRepository, trophyGroupRepository, trophyService));
 
-export const titleRepository = new TitleRepository(mongoDatabase);
-export const trophyGroupRepository = new TrophyGroupRepository(mongoDatabase);

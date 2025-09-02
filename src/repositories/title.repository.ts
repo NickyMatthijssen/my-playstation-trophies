@@ -14,4 +14,8 @@ export class TitleRepository extends AbstractRepository<TrophyTitle> {
     public async findAllOrderedByUpdatedDate(): Promise<WithId<TrophyTitle>[]> {
         return this.collection.find().sort({lastUpdatedDateTime: -1}).toArray();
     }
+
+    public async updateOrCreateOneByTitle(title: TrophyTitle): Promise<void> {
+        await this.collection.updateOne({ npCommunicationId: title.npCommunicationId }, { $set: { ...title } }, { upsert: true });
+    }
 }

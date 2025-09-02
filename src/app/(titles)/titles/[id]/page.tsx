@@ -2,8 +2,9 @@ import Link from "next/link";
 import {notFound} from "next/navigation";
 import {GroupHeader} from "~/components/GroupHeader";
 import Trophy from "~/components/Trophy";
-import {ITrophyGroup, titleRepository, trophyGroupRepository} from "~/service-provider";
+import {titleRepository, trophyGroupRepository} from "~/service-provider";
 import {WithId} from "mongodb";
+import {ITrophyGroup} from "~/services/TrophyService";
 
 type Props = {
     params: Promise<{ id: string }>,

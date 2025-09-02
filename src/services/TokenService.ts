@@ -81,11 +81,11 @@ export class TokenService {
     const authorization: AuthTokensResponse = { ...psnAuthorization };
 
     authorization.expirationDate = new Date(
-      now.getTime() + authorization.expiresIn * 1000
+        now.getTime() + authorization.expiresIn * 1000
     ).toISOString();
 
     authorization.refreshExpirationDate = new Date(
-      now.getTime() + authorization.refreshTokenExpiresIn * 1000
+        now.getTime() + authorization.refreshTokenExpiresIn * 1000
     ).toISOString();
 
     this._authorization = authorization;

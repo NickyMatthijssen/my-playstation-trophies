@@ -1,29 +1,29 @@
 import {ITokenStorage} from "~/types/token-storage.interface";
 import {AuthTokensResponse} from "~/services/TokenService";
-import {MongoClient} from "mongodb";
+import {AccessTokenRepository} from "~/repositories/access-token.repository";
 
 export class MongoTokenStorageService implements ITokenStorage {
-    private _client: MongoClient;
+    private _accessTokenRepository: AccessTokenRepository;
 
-    constructor(client: MongoClient) {
-        this._client = client;
+    constructor(accessTokenRepository: AccessTokenRepository) {
+        this._accessTokenRepository = accessTokenRepository;
     }
 
     async get(): Promise<AuthTokensResponse | undefined> {
-        const result = await this._client.db('psn').collection('keys').findOne();
+        const result = await this._accessTokenRepository.findCurrentToken();
 
         if (!result) {
             return undefined;
         }
 
         const { _id, ...authTokens } = result;
-        return authTokens as AuthTokensResponse;
+        return authTokens;
 
     }
 
     async set(tokens: AuthTokensResponse) {
-        await this._client.db('psn').collection('keys').deleteMany();
+        await this._accessTokenRepository.clearToken();
 
-        await this._client.db('psn').collection('keys').insertOne(tokens);
+        await this._accessTokenRepository.setToken(tokens);
     }
 }
